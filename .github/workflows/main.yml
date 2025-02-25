@@ -1,0 +1,21 @@
+name: CI Pipeline
+
+on: push  # Runs when code is pushed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Runner environment
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3  # Clones repository
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
