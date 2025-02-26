@@ -1,0 +1,53 @@
+name: SQL Linting & Syntax Check
+
+on:
+  push:
+    paths:
+      - '**/*.sql'
+  pull_request:
+    paths:
+      - '**/*.sql'
+
+jobs:
+  lint-sql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install SQLFluff
+        run: pip install sqlfluff
+
+      - name: Find and Lint SQL files
+        run: |
+          sql_files=$(find . -type f -name "*.sql" 2>/dev/null)
+          if [[ -z "$sql_files" ]]; then
+            echo "No SQL files found. Skipping linting."
+            exit 0
+          fi
+          echo "Running SQLFluff lint..."
+          sqlfluff lint --dialect mysql $sql_files
+
+      - name: Auto-Fix SQL Issues (Optional)
+        run: |
+          sql_files=$(find . -type f -name "*.sql" 2>/dev/null)
+          if [[ -n "$sql_files" ]]; then
+            echo "Running SQLFluff fix..."
+            sqlfluff fix --dialect mysql $sql_files
+          fi
+
+      - name: Parse SQL files for syntax errors
+        run: |
+          sql_files=$(find . -type f -name "*.sql" 2>/dev/null)
+          if [[ -z "$sql_files" ]]; then
+            echo "No SQL files found. Skipping syntax check."
+            exit 0
+          fi
+          echo "Checking SQL syntax with SQLFluff parse..."
+          sqlfluff parse --dialect mysql $sql_files
