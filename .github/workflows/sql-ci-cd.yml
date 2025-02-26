@@ -1,0 +1,55 @@
+name: SQL CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sql_pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client
+
+      - name: Ensure scripts folder exists
+        run: |
+          if [ ! -d "scripts" ]; then
+            echo "❌ scripts/ folder not found! Creating it..."
+            mkdir -p scripts
+          fi
+
+      - name: Verify SQL Scripts Existence
+        run: |
+          if [ -z "$(ls -A scripts/*.sql 2>/dev/null)" ]; then
+            echo "✅ No SQL files found in scripts/ folder. Skipping execution."
+            exit 0
+          fi
+
+      - name: Lint SQL Files (Syntax Check)
+        run: |
+          pip install sqlfluff
+          sql_files=$(find scripts/ -name "*.sql")
+          for file in $sql_files; do
+            echo "Linting $file..."
+            sqlfluff lint --dialect mysql $file
+          done
+
+      - name: Run SQL Scripts
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          for file in scripts/*.sql; do
+            echo "🚀 Running $file..."
+            mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME < "$file" || { echo "❌ Error in $file"; exit 1; }
+          done
