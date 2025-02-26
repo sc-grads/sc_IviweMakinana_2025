@@ -16,6 +16,13 @@ jobs:
       - name: Install MySQL Client
         run: sudo apt-get install -y mysql-client
 
+      - name: Ensure scripts folder exists
+        run: |
+          if [ ! -d "scripts" ]; then
+            echo "scripts/ folder not found! Creating it..."
+            mkdir -p scripts
+          fi
+
       - name: Verify SQL Scripts Existence
         run: |
           if [ -z "$(ls -A scripts/*.sql 2>/dev/null)" ]; then
