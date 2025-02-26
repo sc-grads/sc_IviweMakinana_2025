@@ -3,7 +3,7 @@ name: Run SQL Scripts
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   run-sql:
@@ -11,10 +11,17 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  
+        uses: actions/checkout@v3
 
       - name: Install MySQL Client
-        run: sudo apt-get install -y mysql-client  
+        run: sudo apt-get install -y mysql-client
+
+      - name: Verify SQL Scripts Existence
+        run: |
+          if [ -z "$(ls -A scripts/*.sql 2>/dev/null)" ]; then
+            echo "No SQL files found in scripts/ folder. Skipping execution."
+            exit 0
+          fi
 
       - name: Run SQL Scripts
         env:
@@ -25,5 +32,5 @@ jobs:
         run: |
           for file in scripts/*.sql; do
             echo "Running $file..."
-            mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME < $file
+            mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME < "$file"
           done
