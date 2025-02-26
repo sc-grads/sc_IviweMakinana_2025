@@ -1,0 +1,29 @@
+name: Run SQL Scripts
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  run-sql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  
+
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client  
+
+      - name: Run SQL Scripts
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          for file in scripts/*.sql; do
+            echo "Running $file..."
+            mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME < $file
+          done
