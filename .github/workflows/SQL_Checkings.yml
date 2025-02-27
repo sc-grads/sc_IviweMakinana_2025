@@ -1,0 +1,54 @@
+name: SQL Files
+
+on:
+  push:
+    paths:
+      - '**.sql'
+  pull_request:
+    paths:
+      - '**.sql'
+  workflow_dispatch:
+
+jobs:
+  sql-lint:
+    name: Lint SQL Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install sql-lint
+        run: npm install -g sql-lint
+
+      - name: Run sql-lint on all SQL files
+        run: |
+          if find . -name "*.sql" | grep -q .; then
+            sql-lint $(find . -name "*.sql")
+          else
+            echo "No SQL files found."
+          fi
+
+  sql-validate:
+    name: Validate SQL Syntax
+    runs-on: ubuntu-latest
+    needs: sql-lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start MySQL
+        run: |
+          sudo systemctl start mysql
+          sudo systemctl enable mysql
+          sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+
+      - name: Validate SQL Files
+        env:
+          MYSQL_PWD: password
+        run: |
+          for file in $(find . -name "*.sql"); do
+            echo "Checking $file"
+            mysql -u root -e "source $file"
+          done
