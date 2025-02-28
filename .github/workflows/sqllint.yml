@@ -32,14 +32,28 @@ jobs:
             exit 0
           fi
           echo "Running SQLFluff lint..."
-          sqlfluff lint --dialect mysql $sql_files
+          # Avoid running on non-existent files by ensuring files exist
+          for file in $sql_files; do
+            if [[ -f "$file" ]]; then
+              sqlfluff lint --dialect mysql "$file"
+            else
+              echo "Skipping non-existent file: $file"
+            fi
+          done
 
       - name: Auto-Fix SQL Issues (Optional)
         run: |
           sql_files=$(find . -type f -name "*.sql" 2>/dev/null)
           if [[ -n "$sql_files" ]]; then
             echo "Running SQLFluff fix..."
-            sqlfluff fix --dialect mysql $sql_files
+            # Avoid running on non-existent files by ensuring files exist
+            for file in $sql_files; do
+              if [[ -f "$file" ]]; then
+                sqlfluff fix --dialect mysql "$file"
+              else
+                echo "Skipping non-existent file: $file"
+              fi
+            done
           fi
 
       - name: Parse SQL files for syntax errors
@@ -50,4 +64,11 @@ jobs:
             exit 0
           fi
           echo "Checking SQL syntax with SQLFluff parse..."
-          sqlfluff parse --dialect mysql $sql_files
+          # Avoid running on non-existent files by ensuring files exist
+          for file in $sql_files; do
+            if [[ -f "$file" ]]; then
+              sqlfluff parse --dialect mysql "$file"
+            else
+              echo "Skipping non-existent file: $file"
+            fi
+          done
