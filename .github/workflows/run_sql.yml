@@ -1,43 +1,54 @@
-name: Run SQL Scripts
+name: SQL Linting & Syntax Check
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - '**/*.sql'
+  pull_request:
+    paths:
+      - '**/*.sql'
 
 jobs:
-  run-sql:
+  lint-sql:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Install MySQL Client
-        run: sudo apt-get install -y mysql-client
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      - name: Ensure scripts folder exists
+      - name: Install SQLFluff
+        run: pip install sqlfluff
+
+      - name: Find and Lint SQL files
         run: |
-          if [ ! -d "scripts" ]; then
-            echo "scripts/ folder not found! Creating it..."
-            mkdir -p scripts
-          fi
-
-      - name: Verify SQL Scripts Existence
-        run: |
-          if [ -z "$(ls -A scripts/*.sql 2>/dev/null)" ]; then
-            echo "No SQL files found in scripts/ folder. Skipping execution."
+          # Adjust the directory path if needed
+          sql_files=$(find ./DatabaseAdministration/SQLStatements -type f -name "*.sql" 2>/dev/null)
+          if [[ -z "$sql_files" ]]; then
+            echo "No SQL files found. Skipping linting."
             exit 0
           fi
-
-      - name: Run SQL Scripts
-        env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASS: ${{ secrets.DB_PASS }}
-          DB_NAME: ${{ secrets.DB_NAME }}
+          echo "Running SQLFluff lint..."
+          sqlfluff lint --dialect mysql $sql_files
+          
+      - name: Auto-Fix SQL Issues (Optional)
         run: |
-          for file in scripts/*.sql; do
-            echo "Running $file..."
-            mysql -h $DB_HOST -u $DB_USER -p$DB_PASS $DB_NAME < "$file"
-          done
+          sql_files=$(find ./DatabaseAdministration/SQLStatements -type f -name "*.sql" 2>/dev/null)
+          if [[ -n "$sql_files" ]]; then
+            echo "Running SQLFluff fix..."
+            sqlfluff fix --dialect mysql $sql_files
+          fi
+
+      - name: Parse SQL files for syntax errors
+        run: |
+          sql_files=$(find ./DatabaseAdministration/SQLStatements -type f -name "*.sql" 2>/dev/null)
+          if [[ -z "$sql_files" ]]; then
+            echo "No SQL files found. Skipping syntax check."
+            exit 0
+          fi
+          echo "Checking SQL syntax with SQLFluff parse..."
+          sqlfluff parse --dialect mysql $sql_files
