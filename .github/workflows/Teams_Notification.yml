@@ -3,8 +3,8 @@ name: Notify Teams on Pull Request
 on:
   pull_request:
     types:
-      - opened    # When a new PR is created
-      - reopened  # When a previously closed PR is reopened
+      - opened
+      - reopened
 
 jobs:
   notify-teams:
@@ -14,7 +14,7 @@ jobs:
       - name: Send notification to Microsoft Teams
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{
-            "text": "**Pull Request ${{ github.event.action | toTitleCase }}!**\n\n
+            "text": "**Pull Request ${{ github.event.action | toTitleCase }}! **\n\n
             **Repository:** ${{ github.repository }}\n
             **PR Title:** ${{ github.event.pull_request.title }}\n
             **Opened by:** ${{ github.event.pull_request.user.login }}\n
