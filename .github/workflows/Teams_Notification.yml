@@ -1,17 +1,35 @@
-name: Notify Teams on Push
+name: Notify Teams on Pull Request
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - opened    # When a new PR is created
+      - synchronize  # When commits are pushed to an open PR
+      - reopened  # When a previously closed PR is reopened
+      
 
 jobs:
-  notify:
+  notify-teams:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send notification to Microsoft Teams
+      - name: Determine PR Action
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{
-            "text": "🚀 A new push was made to the main branch!\nRepository: '${{ github.repository }}'\nCommit: '${{ github.event.head_commit.message }}'"
-          }' "${{ secrets.TEAMS_WEBHOOK_URL }}"
+          
+          if [[ "${{ github.event.action }}" == "opened" ]]; then
+            ACTION="**New Pull Request Opened! **"
+          elif [[ "${{ github.event.action }}" == "synchronize" ]]; then
+            ACTION="**Pull Request Updated! **"
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            ACTION="**Pull Request Reopened! **"
+          else
+            ACTION="**Pull Request Closed Without Merge **"
+          fi
+
+          curl -X POST -H "Content-Type: application/json" -d "{
+            \"text\": \"$ACTION\n\n
+            **Repository:** ${{ github.repository }}\n
+            **PR Title:** ${{ github.event.pull_request.title }}\n
+            **Opened by:** ${{ github.event.pull_request.user.login }}\n
+            [ View PR ](${{ github.event.pull_request.html_url }})\"
+          }" \"${{ secrets.TEAMS_WEBHOOK_URL }}\"
