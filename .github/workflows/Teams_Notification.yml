@@ -1,0 +1,17 @@
+name: Notify Teams on Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send notification to Microsoft Teams
+        run: |
+          curl -H "Content-Type: application/json" -d '{
+            "text": "🚀 A new push was made to the main branch!\nRepository: '${{ github.repository }}'\nCommit: '${{ github.event.head_commit.message }}'"
+          }' ${{ secrets.TEAMS_WEBHOOK_URL }}
