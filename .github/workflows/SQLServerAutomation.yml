@@ -1,0 +1,80 @@
+name: SQL Server Automation with Pinggy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  automate-sql:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sqlcmd unixodbc-dev curl
+        
+    - name: Download and install Pinggy
+      run: |
+        curl -SsL https://pinggy.io/install.sh | bash
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Start Pinggy tunnel (background)
+      run: |
+        pinggy tcp 1433 --log & sleep 10
+        pinggy geturl > pinggy_url.txt
+        echo "PINGGY_URL=$(cat pinggy_url.txt)" >> $GITHUB_ENV
+        
+    - name: Create database and table
+      env:
+        SQL_USER: ${{ secrets.SQL_USER }}
+        SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      run: |
+        # Extract host and port from Pinggy URL
+        PINGGY_URL=$(cat pinggy_url.txt)
+        SQL_HOST_PORT=$(echo "$PINGGY_URL" | sed -e 's/tcp:\/\///' -e 's/:/ /')
+        
+        # Connect and create database
+        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -Q "CREATE DATABASE AutoTestDB;"
+        
+        # Create table and stored procedure
+        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -d AutoTestDB -Q "
+        CREATE TABLE users (
+            Name NVARCHAR(100),
+            Surname NVARCHAR(100),
+            Email NVARCHAR(255)
+        );
+        
+        CREATE PROCEDURE InsertUser
+            @Name NVARCHAR(100),
+            @Surname NVARCHAR(100),
+            @Email NVARCHAR(255)
+        AS
+        BEGIN
+            INSERT INTO users (Name, Surname, Email)
+            VALUES (@Name, @Surname, @Email);
+        END;
+        "
+        
+        # Insert sample data using stored procedure
+        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -d AutoTestDB -Q "
+        EXEC InsertUser 'John', 'Doe', 'john.doe@example.com';
+        EXEC InsertUser 'Jane', 'Smith', 'jane.smith@example.com';
+        "
+        
+    - name: Verify data
+      env:
+        SQL_USER: ${{ secrets.SQL_USER }}
+        SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+      run: |
+        PINGGY_URL=$(cat pinggy_url.txt)
+        SQL_HOST_PORT=$(echo "$PINGGY_URL" | sed -e 's/tcp:\/\///' -e 's/:/ /')
+        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -d AutoTestDB -Q "SELECT * FROM users;"
+        
+    - name: Stop Pinggy tunnel
+      if: always()
+      run: |
+        pkill -f pinggy
