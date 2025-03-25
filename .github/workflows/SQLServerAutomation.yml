@@ -15,66 +15,89 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y sqlcmd unixodbc-dev curl
+        sudo apt-get install -y sqlcmd unixodbc-dev curl psmisc
         
     - name: Download and install Pinggy
       run: |
         curl -SsL https://pinggy.io/install.sh | bash
         echo "$HOME/.local/bin" >> $GITHUB_PATH
         
-    - name: Start Pinggy tunnel (background)
+    - name: Start Pinggy tunnel
+      id: pinggy
       run: |
-        pinggy tcp 1433 --log & sleep 10
+        # Start pinggy and get process ID
+        pinggy tcp 1433 --log > pinggy.log 2>&1 & 
+        echo $! > pinggy.pid
+        sleep 15
+        
+        # Get URL and verify connection
         pinggy geturl > pinggy_url.txt
         echo "PINGGY_URL=$(cat pinggy_url.txt)" >> $GITHUB_ENV
+        echo "Pinggy tunnel started with URL: $(cat pinggy_url.txt)"
         
     - name: Create database and table
       env:
         SQL_USER: ${{ secrets.SQL_USER }}
         SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
       run: |
-        # Extract host and port from Pinggy URL
         PINGGY_URL=$(cat pinggy_url.txt)
-        SQL_HOST_PORT=$(echo "$PINGGY_URL" | sed -e 's/tcp:\/\///' -e 's/:/ /')
+        SQL_HOST=$(echo "$PINGGY_URL" | cut -d':' -f2 | sed 's/\///g')
+        SQL_PORT=$(echo "$PINGGY_URL" | cut -d':' -f3)
         
-        # Connect and create database
-        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -Q "CREATE DATABASE AutoTestDB;"
+        # Connection test with retries
+        for i in {1..3}; do
+          if sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" \
+             -Q "SELECT 'Connection successful' AS Message"; then
+            break
+          fi
+          sleep 5
+        done
         
-        # Create table and stored procedure
-        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -d AutoTestDB -Q "
-        CREATE TABLE users (
-            Name NVARCHAR(100),
-            Surname NVARCHAR(100),
-            Email NVARCHAR(255)
-        );
+        # Database operations
+        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" \
+          -Q "CREATE DATABASE AutoTestDB;"
         
-        CREATE PROCEDURE InsertUser
-            @Name NVARCHAR(100),
-            @Surname NVARCHAR(100),
-            @Email NVARCHAR(255)
-        AS
-        BEGIN
-            INSERT INTO users (Name, Surname, Email)
-            VALUES (@Name, @Surname, @Email);
-        END;
-        "
+        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" \
+          -d AutoTestDB -Q "
+          IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'users')
+          CREATE TABLE users (
+              Name NVARCHAR(100),
+              Surname NVARCHAR(100),
+              Email NVARCHAR(255)
+          );
+          
+          IF NOT EXISTS (SELECT * FROM sys.procedures WHERE name = 'InsertUser')
+          CREATE PROCEDURE InsertUser
+              @Name NVARCHAR(100),
+              @Surname NVARCHAR(100),
+              @Email NVARCHAR(255)
+          AS
+          BEGIN
+              INSERT INTO users (Name, Surname, Email)
+              VALUES (@Name, @Surname, @Email);
+          END;"
         
-        # Insert sample data using stored procedure
-        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -d AutoTestDB -Q "
-        EXEC InsertUser 'John', 'Doe', 'john.doe@example.com';
-        EXEC InsertUser 'Jane', 'Smith', 'jane.smith@example.com';
-        "
+        # Insert sample data
+        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" \
+          -d AutoTestDB -Q "
+          EXEC InsertUser 'John', 'Doe', 'john.doe@example.com';
+          EXEC InsertUser 'Jane', 'Smith', 'jane.smith@example.com';"
         
     - name: Verify data
-      env:
-        SQL_USER: ${{ secrets.SQL_USER }}
-        SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
       run: |
         PINGGY_URL=$(cat pinggy_url.txt)
-        SQL_HOST_PORT=$(echo "$PINGGY_URL" | sed -e 's/tcp:\/\///' -e 's/:/ /')
-        sqlcmd -S $SQL_HOST_PORT -U $SQL_USER -P $SQL_PASSWORD -d AutoTestDB -Q "SELECT * FROM users;"
+        SQL_HOST=$(echo "$PINGGY_URL" | cut -d':' -f2 | sed 's/\///g')
+        SQL_PORT=$(echo "$PINGGY_URL" | cut -d':' -f3)
+        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" \
+          -d AutoTestDB -Q "SELECT * FROM users;"
         
     - name: Stop Pinggy tunnel
       if: always()
       run: |
-        pkill -f pinggy
+        if [ -f pinggy.pid ]; then
+          kill $(cat pinggy.pid) || true
+          rm pinggy.pid
+        fi
+        # Additional cleanup
+        pkill -f "pinggy tcp" || true
+        pkill -f "ssh -N" || true
