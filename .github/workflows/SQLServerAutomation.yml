@@ -29,7 +29,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
@@ -47,11 +47,11 @@ jobs:
         echo "Waiting for SQL Server to become healthy..."
         for i in {1..30};
         do
-          /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong!Passw0rd -Q "SELECT 1" 2>/dev/null && break
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Iviwe@123 -Q "SELECT 1" 2>/dev/null && break
           echo "Attempt $i: SQL Server not ready yet..."
           sleep 5
         done
-        /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong!Passw0rd -Q "SELECT @@VERSION"
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Iviwe@123 -Q "SELECT @@VERSION"
         echo "SQL Server is ready!"
 
     # Rest of your steps remain the same...
