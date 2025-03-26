@@ -1,0 +1,32 @@
+# Use an official Ubuntu base image
+FROM ubuntu:20.04
+
+# Avoid prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package list and install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add Microsoft SQL Server package repository
+RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl -fsSL https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-2019.list | tee /etc/apt/sources.list.d/mssql-server.list \
+    && curl -fsSL https://packages.microsoft.com/config/ubuntu/20.04/prod.list | tee /etc/apt/sources.list.d/msprod.list
+
+# Install mssql-tools (includes sqlcmd)
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set PATH for sqlcmd
+ENV PATH="$PATH:/opt/mssql-tools/bin"
+
+# Copy SQL scripts into the container
+WORKDIR /app
+COPY create_db_and_table.sql .
+COPY create_stored_procedure.sql .
+
+# Default command (can be overridden in GitHub Actions)
+CMD ["bash"]
