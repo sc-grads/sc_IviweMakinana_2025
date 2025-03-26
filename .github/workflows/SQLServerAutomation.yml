@@ -1,4 +1,4 @@
-name: Deploy AutoTest Database on Ubuntu
+name: Project SQL
 
 on:
   push:
