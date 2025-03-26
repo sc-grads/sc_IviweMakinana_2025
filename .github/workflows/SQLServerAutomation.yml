@@ -6,98 +6,159 @@ on:
     branches: [ main ]
 
 jobs:
-  automate-sql:
+  automate-sql-server:
     runs-on: ubuntu-latest
+    services:
+      sql-server:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: Iviwe@123
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Iviwe@123 -Q 'SELECT 1' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Install Microsoft SQL tools
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
       run: |
-        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-        sudo add-apt-repository "$(curl -s https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
         sudo apt-get update
-          sudo apt-get install -y mssql-tools unixodbc-dev curl psmisc
+        sudo apt-get install -y curl
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+        sudo apt-get update
+        sudo apt-get install -y mssql-tools unixodbc-dev
         echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
         source ~/.bashrc
 
+    - name: Wait for SQL Server to be ready
+      run: |
+        for i in {1..30};
+        do
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong@Passw0rd -Q "SELECT 1" && break
+          sleep 2
+        done
+
+    - name: Create database and user
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong@Passw0rd -Q "
+        USE master;
+        GO
         
-    - name: Download and install Pinggy
+        -- Create database if not exists
+        IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'AutoTest')
+        BEGIN
+            CREATE DATABASE AutoTest;
+            PRINT 'Database AutoTest created successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Database AutoTest already exists.';
+        END
+        GO
+        
+        -- Create login if not exists
+        IF NOT EXISTS (SELECT name FROM sys.server_principals WHERE name = 'Auto_user')
+        BEGIN
+            CREATE LOGIN Auto_user WITH PASSWORD = 'Iviwe@123';
+            PRINT 'Login Auto_user created successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Login Auto_user already exists.';
+        END
+        GO
+        
+        -- Create user in AutoTest database
+        USE AutoTest;
+        GO
+        IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name = 'Auto_user')
+        BEGIN
+            CREATE USER Auto_user FOR LOGIN Auto_user;
+            PRINT 'User Auto_user created successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'User Auto_user already exists.';
+        END
+        GO
+        
+        -- Grant permissions
+        EXEC sp_addrolemember 'db_owner', 'Auto_user';
+        PRINT 'Auto_user granted db_owner role.';
+        GO"
+
+    - name: Create table and stored procedure
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong@Passw0rd -d AutoTest -Q "
+        -- Create user table if not exists
+        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'user' AND type = 'U')
+        BEGIN
+            CREATE TABLE [user] (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                Name NVARCHAR(100) NOT NULL,
+                Surname NVARCHAR(100) NOT NULL,
+                Email NVARCHAR(255) NOT NULL UNIQUE
+            );
+            PRINT 'Table user created successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Table user already exists.';
+        END
+        GO
+        
+        -- Create stored procedure for inserting users
+        IF NOT EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'InsertUser')
+        BEGIN
+            EXEC('
+            CREATE PROCEDURE InsertUser
+                @Name NVARCHAR(100),
+                @Surname NVARCHAR(100),
+                @Email NVARCHAR(255)
+            AS
+            BEGIN
+                INSERT INTO [user] (Name, Surname, Email)
+                VALUES (@Name, @Surname, @Email);
+                
+                SELECT SCOPE_IDENTITY() AS UserId;
+            END
+            ');
+            PRINT 'Stored procedure InsertUser created successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Stored procedure InsertUser already exists.';
+        END
+        GO
+        
+        -- Insert sample data using the stored procedure
+        EXEC InsertUser 'John', 'Doe', 'john.doe@example.com';
+        EXEC InsertUser 'Jane', 'Smith', 'jane.smith@example.com';
+        PRINT 'Sample data inserted successfully.';
+        GO"
+
+    - name: Install Pinggy
       run: |
         curl -SsL https://pinggy.io/install.sh | bash
         echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-    - name: Start Pinggy tunnel
-      id: pinggy
+
+    - name: Expose SQL Server with Pinggy
       run: |
-        # Start Pinggy and save process ID
-        pinggy tcp 1433 --log > pinggy.log 2>&1 & 
-        echo $! > pinggy.pid
-        sleep 15
-        
-        # Extract the public URL from the log file
-        PINGGY_URL=$(grep -o 'https://[a-zA-Z0-9.-]*' pinggy.log | head -n 1)
-        echo "PINGGY_URL=$PINGGY_URL" >> $GITHUB_ENV
-        echo "Pinggy tunnel started at: $PINGGY_URL"
-        
-    - name: Create database and table
-      env:
-        SQL_USER: ${{ secrets.SQL_USER }}
-        SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+        pinggy tcp 1433 > pinggy_output.txt &
+        sleep 5
+        echo "Pinggy URL:"
+        grep "Forwarding" pinggy_output.txt || cat pinggy_output.txt
+        echo "PINGGY_URL=$(grep -o 'tcp://[^ ]*' pinggy_output.txt | head -n 1)" >> $GITHUB_ENV
+
+    - name: Show connection details
       run: |
-        SQL_HOST=$(echo "$PINGGY_URL" | sed -E 's#https://([^:/]+).*#\1#')
-        SQL_PORT=1433
-        
-        # Connection test with retries
-        for i in {1..5}; do
-          if sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" -Q "SELECT 'Connection successful'"; then
-            echo "Connected to SQL Server successfully!"
-            break
-          fi
-          echo "Retrying connection ($i/5)..."
-          sleep 5
-        done
-        
-        # Database and table creation
-        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" -Q "CREATE DATABASE AutoTestDB;"
-        
-        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" -d AutoTestDB -Q "
-        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'users')
-        CREATE TABLE users (
-            Name NVARCHAR(100),
-            Surname NVARCHAR(100),
-            Email NVARCHAR(255)
-        );
-        
-        IF NOT EXISTS (SELECT * FROM sys.procedures WHERE name = 'InsertUser')
-        CREATE PROCEDURE InsertUser
-            @Name NVARCHAR(100),
-            @Surname NVARCHAR(100),
-            @Email NVARCHAR(255)
-        AS
-        BEGIN
-            INSERT INTO users (Name, Surname, Email)
-            VALUES (@Name, @Surname, @Email);
-        END;"
-        
-        # Insert sample data
-        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" -d AutoTestDB -Q "
-        EXEC InsertUser 'John', 'Doe', 'john.doe@example.com';
-        EXEC InsertUser 'Jane', 'Smith', 'jane.smith@example.com';"
-        
-    - name: Verify data
-      run: |
-        SQL_HOST=$(echo "$PINGGY_URL" | sed -E 's#https://([^:/]+).*#\1#')
-        SQL_PORT=1433
-        sqlcmd -S "$SQL_HOST,$SQL_PORT" -U "$SQL_USER" -P "$SQL_PASSWORD" -d AutoTestDB -Q "SELECT * FROM users;"
-        
-    - name: Stop Pinggy tunnel
-      if: always()
-      run: |
-        if [ -f pinggy.pid ]; then
-          kill $(cat pinggy.pid) || true
-          rm pinggy.pid
-        fi
-        # Cleanup
-        pkill -f "pinggy tcp" || true
-        pkill -f "ssh -N" || true
+        echo "SQL Server exposed at: $PINGGY_URL"
+        echo "Connection string:"
+        echo "Server=$PINGGY_URL;Database=AutoTest;User Id=Auto_user;Password=Iviwe@123;"
