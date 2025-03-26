@@ -1,4 +1,6 @@
 -- Create the database if it doesn't exist
+USE master 
+    GO
 IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'AutoTest')
 BEGIN
     CREATE DATABASE AutoTest;
