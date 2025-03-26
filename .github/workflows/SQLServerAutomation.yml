@@ -8,7 +8,7 @@ on:
 jobs:
   automate-sql-server:
     runs-on: ubuntu-latest
-    timeout-minutes: 15  # Give enough time for SQL Server to initialize
+    timeout-minutes: 15
     
     services:
       sql-server:
@@ -16,20 +16,20 @@ jobs:
         env:
           ACCEPT_EULA: Y
           SA_PASSWORD: Iviwe@123  # Must meet complexity requirements
-          MSSQL_PID: Express  # Use Express edition to reduce resource usage
+          MSSQL_PID: Express
         ports:
           - 1433:1433
         options: >-
-          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Iviwe@123 -Q 'SELECT 1' || exit 1"
-          --health-interval 20s  # Longer interval
-          --health-timeout 10s   # Longer timeout
-          --health-retries 5    # More retries
-          --memory="1.5g"       # Limit memory usage
-          --cpus="1.0"          # Limit CPU usage
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourStrong!Passw0rd -Q 'SELECT 1' || exit 1"
+          --health-interval 20s
+          --health-timeout 10s
+          --health-retries 5
+          --memory=1.5g
+          --cpus=1.0
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Install dependencies
       run: |
@@ -54,4 +54,4 @@ jobs:
         /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Iviwe@123 -Q "SELECT @@VERSION"
         echo "SQL Server is ready!"
 
-    # Rest of your steps remain the same...
+    # Rest of your steps...
