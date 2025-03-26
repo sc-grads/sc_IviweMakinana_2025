@@ -21,7 +21,7 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: |
-         docker build -t autotestsql:latest ./docker
+          docker build -t autotestsql:latest .  # Changed from ./docker to .
 
       # Run the Docker container to execute SQL scripts
       - name: Run SQL Scripts in Docker
