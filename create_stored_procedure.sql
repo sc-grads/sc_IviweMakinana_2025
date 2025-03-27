@@ -1,4 +1,4 @@
-USE AutoTest;
+USE AutoTest_IviweMakinana;
 GO
 
 -- Create a stored procedure to insert data into the user table
