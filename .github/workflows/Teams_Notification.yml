@@ -1,10 +1,11 @@
 name: Notify Teams on Merge
 
 on:
-  pull_request:
+  workflow_dispatch:  # Manual trigger
+  pull_request:       # Add pull_request event
     types:
-      - opened   # Runs when a PR is closed (merged or not)
-      - reopened  
+      - opened         # Runs when a PR is opened
+      - reopened
 
 jobs:
   notify-teams:
