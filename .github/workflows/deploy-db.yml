@@ -1,7 +1,8 @@
 name: Deploy AutoTest Database on Ubuntu
 
 on:
-  push:
+  workflow_dispatch:  # Manual trigger
+  pull_request:       # Trigger on pull request events
     branches:
       - main
 
