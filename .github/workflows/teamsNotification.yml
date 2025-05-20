@@ -1,7 +1,7 @@
 name: Notify Teams on Merge
 
 on:
-  
+  #
   pull_request:       # Trigger on pull request events
     branches:
       - main
