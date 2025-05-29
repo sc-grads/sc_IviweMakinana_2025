@@ -1,0 +1,11 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="textlog"
+  DTS:DTSID="{AA72BF1E-C0B2-470E-8B3C-D72C3E651F11}"
+  DTS:CreationName="FILE">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:FileUsageType="1"
+      DTS:ConnectionString="C:\SSIS\textlog.txt" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>
