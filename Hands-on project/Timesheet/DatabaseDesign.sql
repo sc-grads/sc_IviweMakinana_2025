@@ -1,58 +1,82 @@
-CREATE TABLE Employees (
-    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
-    EmployeeName NVARCHAR(100) NOT NULL
+CREATE TABLE Employee (
+    ConsultantID INT IDENTITY(1,1) PRIMARY KEY,
+    ConsultantName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) NULL,
+    CONSTRAINT UQ_ConsultantName UNIQUE (ConsultantName)
 );
-CREATE TABLE Clients (
-    ClientID INT PRIMARY KEY IDENTITY(1,1),
-    ClientName NVARCHAR(255) NOT NULL
-);
-CREATE TABLE Positions (
-    PositionID INT PRIMARY KEY IDENTITY(1,1),
-    PositionName NVARCHAR(100) NOT NULL
-);
-CREATE TABLE Timesheets (
-    TimesheetID INT PRIMARY KEY IDENTITY(1,1),
-    EmployeeID INT FOREIGN KEY REFERENCES Employees(EmployeeID),
-    ClientID INT FOREIGN KEY REFERENCES Clients(ClientID),
-    PositionID INT FOREIGN KEY REFERENCES Positions(PositionID),
-    WeekStartDate DATE NOT NULL,
-    TotalHours DECIMAL(5,2),
-    ProcessedFileID INT NULL -- FK to ProcessedFiles
-);
-CREATE TABLE TimesheetEntries (
-    EntryID INT PRIMARY KEY IDENTITY(1,1),
-    TimesheetID INT FOREIGN KEY REFERENCES Timesheets(TimesheetID),
-    WorkDate DATE NOT NULL,
-    HoursWorked DECIMAL(4,2) NOT NULL
-);
-CREATE TABLE ProcessedFiles (
-    FileID INT PRIMARY KEY IDENTITY(1,1),
-    FileName NVARCHAR(500) NOT NULL,
-    SheetName NVARCHAR(255) NOT NULL,
-    ProcessedDate DATETIME NOT NULL DEFAULT GETDATE(),
-    Status NVARCHAR(50) NOT NULL,
-    Row_Count INT NOT NULL
-);
-CREATE TABLE Task (
-    TaskID INT PRIMARY KEY IDENTITY(1,1),
-    TaskName NVARCHAR(255) NOT NULL,
-    IsBillable BIT NOT NULL DEFAULT 1
-);
-ALTER TABLE TimesheetEntries
-ADD 
-    TaskDescription NVARCHAR(255) NULL,
-    IsBillable BIT NOT NULL DEFAULT 1;
-ALTER TABLE TimesheetEntries
-ADD TaskID INT FOREIGN KEY REFERENCES Task(TaskID);
+GO
 
-ALTER TABLE Timesheets
-ADD 
-    TotalBillableHours DECIMAL(5,2) NULL,
-    TotalNonBillableHours DECIMAL(5,2) NULL;
-CREATE TABLE Client (
-    ClientID INT PRIMARY KEY IDENTITY(1,1),
-    ClientName NVARCHAR(255) NOT NULL UNIQUE
+-- Creating Clients table
+CREATE TABLE Clients (
+    ClientID INT IDENTITY(1,1) PRIMARY KEY,
+    ClientName NVARCHAR(100) NOT NULL,
+    CONSTRAINT UQ_ClientName UNIQUE (ClientName)
 );
-ALTER TABLE Employees ALTER COLUMN EmployeeName NVARCHAR(255);
-aLTER TABLE Positions
-ALTER COLUMN PositionName NVARCHAR(255);
+GO
+CREATE TABLE Task (
+    TaskID INT IDENTITY(1,1) PRIMARY KEY,
+    TaskName NVARCHAR(100) NOT NULL,
+    CONSTRAINT UQ_TaskIDName UNIQUE (TaskName)
+);
+GO
+
+-- Creating Projects table
+CREATE TABLE Project (
+    ProjectID INT IDENTITY(1,1) PRIMARY KEY,
+    ClientID INT NOT NULL,
+    ProjectName NVARCHAR(100) NOT NULL,
+    CONSTRAINT FK_Projects_Clients FOREIGN KEY (ClientID) REFERENCES Clients(ClientID),
+    CONSTRAINT UQ_ProjectName_ClientID UNIQUE (ClientID, ProjectName)
+);
+GO
+
+
+
+-- Creating TimesheetEntries table
+CREATE TABLE Timesheet (
+    TimesheetID BIGINT IDENTITY(1,1) PRIMARY KEY,
+    ConsultantID INT null,
+    TaskID INT NULL, -- Nullable for non-task activities
+    EntryDate DATE NOT NULL,
+    DayOfWeek NVARCHAR(10) NOT NULL,
+    Description NVARCHAR(255) ,
+    Billable BIT NOT NULL, -- 1 for Billable, 0 for Non-Billable
+    Comments NVARCHAR(500) NULL,
+    TotalHours DECIMAL(10,4) NOT NULL CHECK (TotalHours >= 0),
+    StartTime DECIMAL(10,4) NULL, -- Stored as fraction of a day (e.g., 0.3333 for 8:00 AM)
+    EndTime DECIMAL(10,4) NULL, -- Stored as fraction of a day
+    CONSTRAINT FK_TimesheetEntries_Consultants FOREIGN KEY (ConsultantID) REFERENCES Employee(ConsultantID),
+    CONSTRAINT FK_TimesheetEntries_Tasks FOREIGN KEY (TaskID) REFERENCES Task(TaskID),
+    CONSTRAINT CHK_StartEndTime CHECK (EndTime > StartTime OR StartTime IS NULL OR EndTime IS NULL)
+);
+GO
+
+drop TABLE Timesheet
+-- Creating LeaveRecords table
+CREATE TABLE LeaveRecords (
+    LeaveID INT IDENTITY(1,1) PRIMARY KEY,
+    ConsultantID INT NOT NULL,
+    LeaveType NVARCHAR(50) NOT NULL, -- e.g., Annual Leave, Sick Leave, Public Holiday
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL,
+    NumberOfDays DECIMAL(5,2) NOT NULL CHECK (NumberOfDays >= 0),
+    ApprovalObtained BIT NULL, -- Nullable to indicate pending approval
+    SickNote BIT NULL, -- Nullable for non-sick leave
+    AddressDuringLeave NVARCHAR(255) NULL,
+    CONSTRAINT FK_LeaveRecords_Consultants FOREIGN KEY (ConsultantID) REFERENCES Employee(ConsultantID),
+    CONSTRAINT CHK_LeaveDates CHECK (EndDate >= StartDate)
+);
+GO
+
+-- Creating AuditLog table for tracking changes
+CREATE TABLE AuditLog (
+    LogID BIGINT IDENTITY(1,1) PRIMARY KEY,
+    Operation NVARCHAR(10) NOT NULL, -- INSERT, UPDATE, DELETE
+    TableName NVARCHAR(50) NOT NULL,
+    RecordID BIGINT NOT NULL, -- ID of the affected record
+    ChangeTimestamp DATETIME2 NOT NULL DEFAULT GETDATE(),
+    Details NVARCHAR(1000) NULL, -- JSON or text details about the change
+    ConsultantID INT NULL, -- Optional: Track which consultant's data was affected
+    CONSTRAINT FK_AuditLog_Consultants FOREIGN KEY (ConsultantID) REFERENCES Employee(ConsultantID)
+);
+GO
