@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
-  DTS:CreationDate="6/4/2025 10:11:28 PM"
+  DTS:CreationDate="6/11/2025 9:00:51 AM"
   DTS:CreationName="Microsoft.Package"
   DTS:CreatorComputerName="LAPTOP-66HI94H2"
   DTS:CreatorName="LAPTOP-66HI94H2\IviweMakinana"
-  DTS:DTSID="{D4EF2ECA-7299-4F1D-8D21-E90373F1B654}"
+  DTS:DTSID="{BEFE65CD-1BEB-461C-86CB-721724E73C2F}"
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="16.0.5685.0"
   DTS:LocaleID="7177"
   DTS:ObjectName="Client"
   DTS:PackageType="5"
-  DTS:VersionBuild="4"
-  DTS:VersionGUID="{1F77C1E6-CC8F-4A2E-AD45-6BEF3D0B627C}">
+  DTS:VersionBuild="2"
+  DTS:VersionGUID="{4B723AB1-C2F6-4465-B9B1-0F49451317C3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[Excel Connection Manager]"
       DTS:CreationName="EXCEL"
-      DTS:DTSID="{32F1308A-F946-456A-BED7-1FF260D401CB}"
+      DTS:DTSID="{9AE2C428-2876-457C-9160-C47BB1D4247D}"
       DTS:ObjectName="Excel Connection Manager">
       <DTS:ObjectData>
         <DTS:ConnectionManager
@@ -31,13 +31,13 @@
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[LocalHost.TimesheetDB]"
       DTS:CreationName="OLEDB"
-      DTS:DTSID="{6A5E3B8C-AC48-4C66-BA1F-98CD253D7FD9}"
+      DTS:DTSID="{C86D98C8-F1C1-48E8-911D-28957D81AC36}"
       DTS:ObjectName="LocalHost.TimesheetDB">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:ConnectRetryCount="1"
           DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=.;Initial Catalog=TimesheetDB;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-Client-{6A5E3B8C-AC48-4C66-BA1F-98CD253D7FD9}LocalHost.TimesheetDB;Auto Translate=False;" />
+          DTS:ConnectionString="Data Source=.;Initial Catalog=TimesheetDB;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-Client-{C86D98C8-F1C1-48E8-911D-28957D81AC36}LocalHost.TimesheetDB;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -47,7 +47,7 @@
       DTS:refId="Package\Data Flow Task"
       DTS:CreationName="Microsoft.Pipeline"
       DTS:Description="Data Flow Task"
-      DTS:DTSID="{57D1D3AF-F15C-4559-B21A-E1938FDBD9DF}"
+      DTS:DTSID="{63A9F0FA-6089-423F-A15F-BE2DFAEC7B2A}"
       DTS:ExecutableType="Microsoft.Pipeline"
       DTS:LocaleID="-1"
       DTS:ObjectName="Data Flow Task"
@@ -304,7 +304,7 @@
         <NodeLayout
           Size="150.4,41.6"
           Id="Package\Data Flow Task"
-          TopLeft="352.49998074025,78.8666661182377" />
+          TopLeft="374.999979510904,71.9333328331179" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -316,25 +316,25 @@
         <NodeLayout
           Size="140,41.6"
           Id="Package\Data Flow Task\Excel Source"
-          TopLeft="424.166643491223,35.533333086239" />
+          TopLeft="452.499975276491,112.666665883197" />
         <NodeLayout
           Size="171.2,41.6"
           Id="Package\Data Flow Task\OLE DB Destination"
-          TopLeft="405.833311159579,131.733332417276" />
+          TopLeft="443.333309110669,198.466665286554" />
         <EdgeLayout
           Id="Package\Data Flow Task.Paths[Excel Source Output]"
-          TopLeft="492.799977325401,77.133333086239">
+          TopLeft="525.71664219358,154.266665883197">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54.5999993310372"
+              EndConnector="0,44.1999994033576"
               Start="0,0"
-              End="0,47.0999993310372">
+              End="0,36.6999994033576">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,47.0999993310372" />
+                    End="0,36.6999994033576" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

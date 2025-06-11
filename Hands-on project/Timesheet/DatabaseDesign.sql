@@ -80,3 +80,24 @@ CREATE TABLE AuditLog (
     CONSTRAINT FK_AuditLog_Consultants FOREIGN KEY (ConsultantID) REFERENCES Employee(ConsultantID)
 );
 GO
+CREATE TABLE StagingTimesheet (
+    TimesheetID BIGINT, -- No IDENTITY, as staging may import existing IDs
+    ConsultantID INT NULL,
+	ConsultantName NVARCHAR(100), 
+    TaskID INT NULL,
+	TaskName NVARCHAR(100) NULL,
+    EntryDate DATETIME2 NULL, -- Allow NULL temporarily for validation
+    DayOfWeek NVARCHAR(10) NULL,
+    Description NVARCHAR(255) NULL,
+    Billable BIT NULL,
+    Comments NVARCHAR(500) NULL,
+    TotalHours DECIMAL(10,4) NULL, -- Allow NULL for validation
+    StartTime DECIMAL(10,4) NULL,
+    EndTime DECIMAL(10,4) NULL,
+    BatchID INT NULL, -- Optional: Track ETL batch
+    ErrorFlag BIT DEFAULT 0, -- Optional: Mark rows with issues
+    ErrorMessage NVARCHAR(1000) NULL -- Optional: Store validation errors
+);
+drop  TABLE StagingTimesheet
+TRUNCATE TABLE StagingTimesheet;
+
