@@ -101,3 +101,67 @@ CREATE TABLE StagingTimesheet (
 drop  TABLE StagingTimesheet
 TRUNCATE TABLE StagingTimesheet;
 
+ CREATE TABLE Stage_LeaveRecords (
+    StageLeaveID INT IDENTITY(1,1) PRIMARY KEY,            -- Optional surrogate key
+    ConsultantID INT NULL,                                 -- Nullable for flexibility, validate in SSIS
+    LeaveType NVARCHAR(50) NULL,                       -- Required
+    StartDate DATE NULL,                                   -- Nullable (used in date check constraint)
+    EndDate DATE NOT NULL,                                 -- Required
+    NumberOfDays DECIMAL(5,2) NULL,                        -- Optional, computed if needed
+    ApprovalObtained BIT NULL,                             -- Optional
+    SickNote BIT NULL,                                     -- Optional
+    AddressDuringLeave NVARCHAR(255) NULL,                 -- Optional
+
+    -- Constraint to ensure dates make sense
+    CONSTRAINT CHK_Stage_LeaveDates CHECK (
+        StartDate IS NULL OR EndDate >= StartDate
+    )
+);
+GO
+drop TABLE AuditLog
+ALTER TABLE Stage_LeaveRecords ALTER COLUMN EndDate DATE NULL;
+CREATE TABLE AuditLog (
+    AuditID int NOT NULL,
+    ConsultantID nvarchar(100) NOT NULL,
+    SubmissionMonth nvarchar(10) NOT NULL,
+    SubmissionDate date NOT NULL,
+    SubmissionType nvarchar(20) NOT NULL,
+    ChangeType nvarchar(20) NOT NULL,
+    AffectedTable nvarchar(20) NOT NULL,
+    RecordCount int NOT NULL,
+    AuditTimestamp datetime NOT NULL
+);
+CREATE TABLE AuditLog (
+    AuditID INT IDENTITY(1,1) PRIMARY KEY,
+    MessageName NVARCHAR(100),
+    TaskName NVARCHAR(100),
+    TableName NVARCHAR(50),
+    RowsLoaded INT,
+    RunDate DATETIME,
+    ExecutedBy NVARCHAR(100),
+    EmployeeName NVARCHAR(100),
+    SheetName NVARCHAR(255)
+);
+EXEC sp_help 'AuditLog';
+ALTER TABLE AuditLog
+ALTER COLUMN MessageName nVARCHAR(50);
+ALTER TABLE AuditLog
+ALTER COLUMN TaskName nVARCHAR(50);
+
+CREATE TABLE dbo.ErrorLog (
+    ErrorLogID     INT IDENTITY(1,1) PRIMARY KEY,
+    
+    BatchID        INT NOT NULL,
+    CONSTRAINT FK_ErrorLog_AuditLog_BatchID
+        FOREIGN KEY (BatchID) REFERENCES dbo.AuditLog(AuditID),
+    
+    ErrorTimeUtc   DATETIME2(7) NOT NULL
+        CONSTRAINT DF_ErrorLog_ErrorTimeUtc DEFAULT (SYSUTCDATETIME()),
+
+    ComponentName  NVARCHAR(100) NOT NULL,   -- e.g., 'OLE DB Destination', 'Lookup ConsultantID'
+
+    ErrorMessage   NVARCHAR(MAX) NOT NULL,   -- Full error message or exception text
+
+    RowKey         NVARCHAR(200) NULL        -- Optional: key info to trace the data (e.g., EntryDate + ConsultantName)
+);
+GO
