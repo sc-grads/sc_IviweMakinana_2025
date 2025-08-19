@@ -1,0 +1,7 @@
+C:\SSIS\Calculator\Calculator\bin\Debug\Calculator.exe.config
+C:\SSIS\Calculator\Calculator\bin\Debug\Calculator.exe
+C:\SSIS\Calculator\Calculator\bin\Debug\Calculator.pdb
+C:\SSIS\Calculator\Calculator\obj\Debug\Calculator.csproj.AssemblyReference.cache
+C:\SSIS\Calculator\Calculator\obj\Debug\Calculator.csproj.CoreCompileInputs.cache
+C:\SSIS\Calculator\Calculator\obj\Debug\Calculator.exe
+C:\SSIS\Calculator\Calculator\obj\Debug\Calculator.pdb

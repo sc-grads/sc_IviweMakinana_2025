@@ -1,0 +1,14 @@
+C:\SSIS\Arrayz\Arrayz\bin\Debug\net8.0\Arrayz.exe
+C:\SSIS\Arrayz\Arrayz\bin\Debug\net8.0\Arrayz.deps.json
+C:\SSIS\Arrayz\Arrayz\bin\Debug\net8.0\Arrayz.runtimeconfig.json
+C:\SSIS\Arrayz\Arrayz\bin\Debug\net8.0\Arrayz.dll
+C:\SSIS\Arrayz\Arrayz\bin\Debug\net8.0\Arrayz.pdb
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.AssemblyInfoInputs.cache
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.AssemblyInfo.cs
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.csproj.CoreCompileInputs.cache
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.dll
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\refint\Arrayz.dll
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.pdb
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\Arrayz.genruntimeconfig.cache
+C:\SSIS\Arrayz\Arrayz\obj\Debug\net8.0\ref\Arrayz.dll

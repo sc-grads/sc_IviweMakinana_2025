@@ -1,0 +1,14 @@
+C:\SSIS\Methodsapp\Methodsapp\bin\Debug\net8.0\Methodsapp.exe
+C:\SSIS\Methodsapp\Methodsapp\bin\Debug\net8.0\Methodsapp.deps.json
+C:\SSIS\Methodsapp\Methodsapp\bin\Debug\net8.0\Methodsapp.runtimeconfig.json
+C:\SSIS\Methodsapp\Methodsapp\bin\Debug\net8.0\Methodsapp.dll
+C:\SSIS\Methodsapp\Methodsapp\bin\Debug\net8.0\Methodsapp.pdb
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.AssemblyInfoInputs.cache
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.AssemblyInfo.cs
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.csproj.CoreCompileInputs.cache
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.dll
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\refint\Methodsapp.dll
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.pdb
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\Methodsapp.genruntimeconfig.cache
+C:\SSIS\Methodsapp\Methodsapp\obj\Debug\net8.0\ref\Methodsapp.dll

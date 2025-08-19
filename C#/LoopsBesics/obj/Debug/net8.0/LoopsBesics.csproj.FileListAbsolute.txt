@@ -1,0 +1,14 @@
+C:\SSIS\LoopsBesics\LoopsBesics\bin\Debug\net8.0\LoopsBesics.exe
+C:\SSIS\LoopsBesics\LoopsBesics\bin\Debug\net8.0\LoopsBesics.deps.json
+C:\SSIS\LoopsBesics\LoopsBesics\bin\Debug\net8.0\LoopsBesics.runtimeconfig.json
+C:\SSIS\LoopsBesics\LoopsBesics\bin\Debug\net8.0\LoopsBesics.dll
+C:\SSIS\LoopsBesics\LoopsBesics\bin\Debug\net8.0\LoopsBesics.pdb
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.AssemblyInfoInputs.cache
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.AssemblyInfo.cs
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.csproj.CoreCompileInputs.cache
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.dll
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\refint\LoopsBesics.dll
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.pdb
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\LoopsBesics.genruntimeconfig.cache
+C:\SSIS\LoopsBesics\LoopsBesics\obj\Debug\net8.0\ref\LoopsBesics.dll

@@ -1,0 +1,14 @@
+C:\SSIS\Exesize2\Exesize2\bin\Debug\net8.0\Exesize2.exe
+C:\SSIS\Exesize2\Exesize2\bin\Debug\net8.0\Exesize2.deps.json
+C:\SSIS\Exesize2\Exesize2\bin\Debug\net8.0\Exesize2.runtimeconfig.json
+C:\SSIS\Exesize2\Exesize2\bin\Debug\net8.0\Exesize2.dll
+C:\SSIS\Exesize2\Exesize2\bin\Debug\net8.0\Exesize2.pdb
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.AssemblyInfoInputs.cache
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.AssemblyInfo.cs
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.csproj.CoreCompileInputs.cache
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.dll
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\refint\Exesize2.dll
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.pdb
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\Exesize2.genruntimeconfig.cache
+C:\SSIS\Exesize2\Exesize2\obj\Debug\net8.0\ref\Exesize2.dll

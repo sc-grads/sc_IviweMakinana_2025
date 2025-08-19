@@ -1,0 +1,14 @@
+C:\SSIS\Car\Car\bin\Debug\net8.0\Car.exe
+C:\SSIS\Car\Car\bin\Debug\net8.0\Car.deps.json
+C:\SSIS\Car\Car\bin\Debug\net8.0\Car.runtimeconfig.json
+C:\SSIS\Car\Car\bin\Debug\net8.0\Car.dll
+C:\SSIS\Car\Car\bin\Debug\net8.0\Car.pdb
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.AssemblyInfoInputs.cache
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.AssemblyInfo.cs
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.csproj.CoreCompileInputs.cache
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.dll
+C:\SSIS\Car\Car\obj\Debug\net8.0\refint\Car.dll
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.pdb
+C:\SSIS\Car\Car\obj\Debug\net8.0\Car.genruntimeconfig.cache
+C:\SSIS\Car\Car\obj\Debug\net8.0\ref\Car.dll

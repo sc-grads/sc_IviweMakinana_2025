@@ -1,0 +1,14 @@
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.AssemblyInfoInputs.cache
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.AssemblyInfo.cs
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.csproj.CoreCompileInputs.cache
+C:\SSIS\AdventureGame\AdventureGame\bin\Debug\net8.0\AdventureGame.exe
+C:\SSIS\AdventureGame\AdventureGame\bin\Debug\net8.0\AdventureGame.deps.json
+C:\SSIS\AdventureGame\AdventureGame\bin\Debug\net8.0\AdventureGame.runtimeconfig.json
+C:\SSIS\AdventureGame\AdventureGame\bin\Debug\net8.0\AdventureGame.dll
+C:\SSIS\AdventureGame\AdventureGame\bin\Debug\net8.0\AdventureGame.pdb
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.dll
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\refint\AdventureGame.dll
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.pdb
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\AdventureGame.genruntimeconfig.cache
+C:\SSIS\AdventureGame\AdventureGame\obj\Debug\net8.0\ref\AdventureGame.dll
