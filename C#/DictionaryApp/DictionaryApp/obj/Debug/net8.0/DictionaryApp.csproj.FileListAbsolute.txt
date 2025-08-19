@@ -1,0 +1,14 @@
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.AssemblyInfoInputs.cache
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.AssemblyInfo.cs
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.csproj.CoreCompileInputs.cache
+C:\SSIS\DictionaryApp\DictionaryApp\bin\Debug\net8.0\DictionaryApp.exe
+C:\SSIS\DictionaryApp\DictionaryApp\bin\Debug\net8.0\DictionaryApp.deps.json
+C:\SSIS\DictionaryApp\DictionaryApp\bin\Debug\net8.0\DictionaryApp.runtimeconfig.json
+C:\SSIS\DictionaryApp\DictionaryApp\bin\Debug\net8.0\DictionaryApp.dll
+C:\SSIS\DictionaryApp\DictionaryApp\bin\Debug\net8.0\DictionaryApp.pdb
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.dll
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\refint\DictionaryApp.dll
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.pdb
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\DictionaryApp.genruntimeconfig.cache
+C:\SSIS\DictionaryApp\DictionaryApp\obj\Debug\net8.0\ref\DictionaryApp.dll
