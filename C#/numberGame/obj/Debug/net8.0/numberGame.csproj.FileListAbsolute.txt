@@ -1,0 +1,14 @@
+C:\SSIS\numberGame\numberGame\bin\Debug\net8.0\numberGame.exe
+C:\SSIS\numberGame\numberGame\bin\Debug\net8.0\numberGame.deps.json
+C:\SSIS\numberGame\numberGame\bin\Debug\net8.0\numberGame.runtimeconfig.json
+C:\SSIS\numberGame\numberGame\bin\Debug\net8.0\numberGame.dll
+C:\SSIS\numberGame\numberGame\bin\Debug\net8.0\numberGame.pdb
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.AssemblyInfoInputs.cache
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.AssemblyInfo.cs
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.csproj.CoreCompileInputs.cache
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.dll
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\refint\numberGame.dll
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.pdb
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\numberGame.genruntimeconfig.cache
+C:\SSIS\numberGame\numberGame\obj\Debug\net8.0\ref\numberGame.dll

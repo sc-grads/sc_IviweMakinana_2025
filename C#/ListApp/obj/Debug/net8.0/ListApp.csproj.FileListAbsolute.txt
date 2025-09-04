@@ -1,0 +1,14 @@
+C:\SSIS\ListApp\ListApp\bin\Debug\net8.0\ListApp.exe
+C:\SSIS\ListApp\ListApp\bin\Debug\net8.0\ListApp.deps.json
+C:\SSIS\ListApp\ListApp\bin\Debug\net8.0\ListApp.runtimeconfig.json
+C:\SSIS\ListApp\ListApp\bin\Debug\net8.0\ListApp.dll
+C:\SSIS\ListApp\ListApp\bin\Debug\net8.0\ListApp.pdb
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.AssemblyInfoInputs.cache
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.AssemblyInfo.cs
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.csproj.CoreCompileInputs.cache
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.dll
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\refint\ListApp.dll
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.pdb
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ListApp.genruntimeconfig.cache
+C:\SSIS\ListApp\ListApp\obj\Debug\net8.0\ref\ListApp.dll

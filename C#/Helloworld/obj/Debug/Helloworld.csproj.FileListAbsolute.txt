@@ -1,0 +1,7 @@
+C:\SSIS\Helloworld\Helloworld\bin\Debug\Helloworld.exe.config
+C:\SSIS\Helloworld\Helloworld\bin\Debug\Helloworld.exe
+C:\SSIS\Helloworld\Helloworld\bin\Debug\Helloworld.pdb
+C:\SSIS\Helloworld\Helloworld\obj\Debug\Helloworld.csproj.AssemblyReference.cache
+C:\SSIS\Helloworld\Helloworld\obj\Debug\Helloworld.csproj.CoreCompileInputs.cache
+C:\SSIS\Helloworld\Helloworld\obj\Debug\Helloworld.exe
+C:\SSIS\Helloworld\Helloworld\obj\Debug\Helloworld.pdb
